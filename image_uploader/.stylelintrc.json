@@ -1,0 +1,9 @@
+{
+  "extends": ["stylelint-config-standard-scss", "stylelint-config-prettier"],
+  "rules": {
+    "selector-class-pattern": null,
+    "no-invalid-double-slash-comments": null,
+    "scss/dollar-variable-pattern": null,
+    "keyframes-name-pattern": null
+  }
+}
