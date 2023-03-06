@@ -1,23 +1,33 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import styles from './App.module.scss';
 import bgImage from './assets/image.svg';
+import axiosInstance from './AxiosInstance/AxiosInstance';
 
 const App = () => {
   const [progress, setProgress] = useState<number>(0);
+  const [imageUrl, setImageUrl] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleUpload = (e: any) => {
     // Pass the options to axios as props, to get the progress simulation
     const options = {
-      onUploadProgress: (progressEvent: ProgressEvent) => {
+      onUploadProgress: (progressEvent: any) => {
         const { loaded, total } = progressEvent;
-        // We could remove this var and pass Math.floor((loaded * 100) / total) directly to our state to have less memory allocation, but this is a very simple app and it won't impact the performance. Just to let people know if anyone interested
+        ``;
         const percentage = Math.floor((loaded * 100) / total);
         setProgress(percentage);
       },
     };
-    console.log(options, progress);
 
-    console.log(e.target.files[0]);
+    const image = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', image);
+
+    console.log(image);
+
+    axiosInstance
+      .post('/image-upload-cloudinary', formData)
+      .then((res) => setImageUrl(res.data.result))
+      .catch((err) => console.log(err.response));
   };
 
   const handleButtonClick = () => {
@@ -33,7 +43,12 @@ const App = () => {
         </div>
         <div className={styles.ImageUploader__input}>
           <label htmlFor="image-upload">
-            <img src={bgImage} alt="uploadImage" id="image-upload" />
+            <img
+              src={Boolean(imageUrl) ? imageUrl : bgImage}
+              alt="uploadImage"
+              id="image-upload"
+              className={Boolean(imageUrl) ? styles.ImageUrl : ''}
+            />
           </label>
           <input ref={fileInputRef} onChange={(e) => handleUpload(e)} type="file" id="image-upload" accept="image/*" />
         </div>

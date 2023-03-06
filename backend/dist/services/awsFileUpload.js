@@ -10,28 +10,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import AWS from "aws-sdk";
 import * as dotenv from "dotenv";
 dotenv.config();
+// AWS S3 config
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: process.env.AWS_REGION,
 });
-function uploadFileToS3(req, res) {
+function uploadFileS3(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        // TODO: get file from request
-        // const image = req.body.image;
+        const image = req.body.image;
         const params = {
             Bucket: process.env.S3_BUCKET || "saman-fayazi",
-            Body: "This is the second file",
-            Key: "my-second-file.txt",
+            Body: image,
+            Key: "s3-uploaded-image",
         };
         const result = yield s3.putObject(params).promise();
         console.log(`Uploaded file to S3 bucket ${process.env.S3_BUCKET}`);
-        if (result) {
-            res.send({
-                message: "File uploaded successfully in ",
-                result,
-            });
-        }
+        return result;
     });
 }
-export default uploadFileToS3;
+export default uploadFileS3;

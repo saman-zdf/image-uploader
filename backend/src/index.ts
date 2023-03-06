@@ -1,11 +1,19 @@
 import express, { Request, Response } from "express";
 import uploadImagRouter from "./routes/imageUploadRoute.js";
+import bodyParser from "body-parser";
+import cors from "cors";
+import fileupload from "express-fileupload";
+
 import * as dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-
+// Middlewares
 app.use(express.json());
+app.use(cors());
+app.use(fileupload({ useTempFiles: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Health check
 app.get("/", (req: Request, res: Response) => {
@@ -14,7 +22,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // Upload image
 
-app.use("/image", uploadImagRouter);
+app.use("/", uploadImagRouter);
 
 const PORT = process.env.PORT || 8080;
 

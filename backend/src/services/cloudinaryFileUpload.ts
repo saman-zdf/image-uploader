@@ -1,4 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 // Configuration
 cloudinary.config({
@@ -7,15 +9,4 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY,
 });
 
-// Upload image function
-const uploadImage = async (file: any) => {
-  const result = await cloudinary.uploader.upload(file, {
-    folder: "image_upload_challenge",
-    use_filename: true,
-    unique_filename: false,
-  });
-
-  return result;
-};
-
-export default uploadImage;
+export default cloudinary;
